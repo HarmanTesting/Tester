@@ -1,38 +1,46 @@
 name: Unity CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Unity
-      uses: game-ci/unity-actions/setup@v2
-      with:
-        unityVersion: 2020.3.11f1  # Set this to your Unity version
+      - name: Set up Unity
+        uses: webbertakken/unity-actions@v2.3
+        with:
+          unityVersion: 2020.3.11f1  # Set this to your Unity version
 
-    - name: Test project
-      run: xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' unity-editor -projectPath . -runTests -testResults results.xml
-      continue-on-error: true
+      - name: Test project
+        run: |
+          mkdir -p TestResults
+          xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' unity-editor -batchmode -projectPath . -runTests -testPlatform editmode -testResults TestResults/editmode.xml
+        continue-on-error: true
 
-    - name: Publish test results
-      uses: actions/upload-artifact@v2
-      with:
-        name: test-results
-        path: results.xml
+      - name: Publish test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: TestResults
 
-    - name: Build project
-      run: |
-        mkdir -p build
-        xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' unity-editor -quit -batchmode -nographics -projectPath . -buildTarget StandaloneLinux64 -buildPath build/StandaloneLinux64
-      continue-on-error: true
+      - name: Build project
+        run: |
+          mkdir -p Build
+          xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' unity-editor -batchmode -projectPath . -buildTarget WebGL -quit
+        continue-on-error: true
 
-    - name: Upload build
-      uses: actions/upload-artifact@v2
-      with:
-        name: build
-        path: build
+      - name: Upload build
+        uses: actions/upload-artifact@v2
+        with:
+          name: WebGL-Build
+          path: Build
