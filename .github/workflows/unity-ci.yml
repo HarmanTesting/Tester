@@ -14,7 +14,7 @@ jobs:
           
       - name: Download Unity Hub
         run: |
-          wget -O unity-editor.AppImage https://download.unity3d.com/download_unity/hub/UnityHub.AppImage
+          wget -O unity-editor.AppImage https://www.dropbox.com/s/your_dropbox_link/UnityHub.AppImage?dl=1
           chmod +x unity-editor.AppImage  # Ensure the downloaded file is executable
           
       - name: Cache Unity packages
