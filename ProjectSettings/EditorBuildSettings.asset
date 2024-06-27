@@ -6,4 +6,5 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes: []
   m_configObjects:
+    EasyAR.Settings: {fileID: 11400000, guid: 9bc479b38daa7ce4dbc8f07e0ca0be71, type: 2}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 5792e221afde4c743a2343ed4b52aef7, type: 2}
