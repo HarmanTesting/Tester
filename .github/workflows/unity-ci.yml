@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         projectPath:
-          - "E:\MyTestingProjects\Easy AR"
+          - Easy AR
         unityVersion: '2022.3.7f1' # some version must be included for package testing
         testMode:
           - playmode
