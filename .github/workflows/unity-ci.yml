@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest  # Change to windows-latest for Windows environment
     
     steps:
       - name: Checkout repository
@@ -17,7 +17,7 @@ jobs:
         uses: game-ci/unity-test-runner@v1
         with:
           unityVersion: '2022.3.7f1'  # Replace with your Unity version
-          components: 'unity, android'  # Replace with necessary components
+          components: 'unity, windows'  # Adjust components for Windows build
           license: ${{ secrets.UNITY_LICENSE }}
           
       - name: Cache Unity packages
@@ -35,11 +35,11 @@ jobs:
       - name: Build project
         run: |
           mkdir -p build
-          xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' unity-editor -quit -batchmode -nographics -projectPath . -buildTarget StandaloneLinux64 -buildPath build/StandaloneLinux64
+          unity-editor -quit -batchmode -nographics -projectPath . -buildTarget StandaloneWindows64 -buildPath build/StandaloneWindows64
         continue-on-error: true
         
       - name: Set build artifact path
-        run: echo "BUILD_PATH=build/StandaloneLinux64" >> $GITHUB_ENV
+        run: echo "BUILD_PATH=build/StandaloneWindows64" >> $GITHUB_ENV
         
       - name: Upload build
         uses: actions/upload-artifact@v2
