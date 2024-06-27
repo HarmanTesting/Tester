@@ -10,21 +10,31 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Unity
-        uses: webbertakken/unity-actions@v2.3
-        with:
-          unityVersion: 2020.3.11f1  # Set this to your Unity version
+      - name: Install Unity
+        run: |
+          sudo apt-get install -y --no-install-recommends \
+            gpg-agent \
+            curl \
+            software-properties-common
+          sudo add-apt-repository ppa:openjdk-r/ppa -y
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            openjdk-8-jdk
+          curl -s "https://beta.unity3d.com/download/318683f0e3ef/LinuxEditorInstaller/UnitySetup-2018.3.8f1" -o UnitySetup
+          chmod +x UnitySetup
+          sudo ./UnitySetup --unattended --install-location=/opt/unity --components=Unity,Windows
+          sudo rm UnitySetup
 
       - name: Test project
         run: |
           mkdir -p TestResults
-          xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' unity-editor -batchmode -projectPath . -runTests -testPlatform editmode -testResults TestResults/editmode.xml
+          xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' /opt/unity/Editor/Unity -batchmode -projectPath . -runTests -testPlatform editmode -testResults TestResults/editmode.xml
         continue-on-error: true
 
       - name: Publish test results
@@ -36,7 +46,7 @@ jobs:
       - name: Build project
         run: |
           mkdir -p Build
-          xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' unity-editor -batchmode -projectPath . -buildTarget WebGL -quit
+          xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' /opt/unity/Editor/Unity -batchmode -projectPath . -buildTarget WebGL -quit
         continue-on-error: true
 
       - name: Upload build
