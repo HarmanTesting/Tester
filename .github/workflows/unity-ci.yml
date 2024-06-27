@@ -14,10 +14,9 @@ jobs:
           
       - name: Download Unity Hub
         run: |
-          wget -O unity-editor.AppImage https://public-cdn.cloud.unity3d.com/hub/prod/releases-linux.yml && \
-          DOWNLOAD_URL=$(grep downloadUrl unity-editor.AppImage | head -n 1 | cut -d ' ' -f 4) && \
-          wget -O unity-editor.AppImage $DOWNLOAD_URL && \
+          wget -O unity-editor.AppImage <download_url>
           chmod +x unity-editor.AppImage
+
           
       - name: Cache Unity packages
         uses: actions/cache@v2
