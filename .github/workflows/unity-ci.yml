@@ -27,7 +27,7 @@ jobs:
         with:
           packageMode: true
           projectPath: ${{ matrix.projectPath }}
-          unityVersion: ${{ matrix.unityVersion }}
+          unityVersion: '2022.3.7f1'  # Replace with your Unity version
           testMode: ${{ matrix.testMode }}
           artifactsPath: ${{ matrix.testMode }}-artifacts
           githubToken: ${{ secrets.GITHUB_TOKEN }}
