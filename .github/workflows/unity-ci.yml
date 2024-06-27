@@ -12,13 +12,11 @@ jobs:
         with:
           lfs: true
           
-      - name: Set up Unity
-        id: setup-unity
-        uses: game-ci/unity-test-runner@v1
-        with:
-          unityVersion: '2022.3.7f1'  # Replace with your Unity version
-          components: 'unity, linux'  # Use 'linux' for Linux build tools
-          license: ${{ secrets.UNITY_LICENSE }}
+      - name: Install Unity
+        run: |
+          curl -sS https://public-cdn.cloud.unity3d.com/hub/prod/releases-linux.yml | grep downloadUrl | head -n 1 | cut -d ' ' -f 4 | xargs wget -O unity-editor.AppImage
+          chmod +x unity-editor.AppImage
+          ./unity-editor.AppImage --install-location ./UnityHub --unattended --package Unity --package Linux-Android --package Windows-Mono --package Web-GL
           
       - name: Cache Unity packages
         uses: actions/cache@v2
@@ -35,7 +33,7 @@ jobs:
       - name: Build project
         run: |
           mkdir -p build
-          xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' unity-editor -quit -batchmode -nographics -projectPath . -buildTarget StandaloneLinux64 -buildPath build/StandaloneLinux64
+          ./UnityHub/Editor/2022.3.7f1/Unity/Editor/Unity -quit -batchmode -nographics -projectPath . -buildTarget StandaloneLinux64 -buildPath build/StandaloneLinux64
         continue-on-error: true
         
       - name: Set build artifact path
