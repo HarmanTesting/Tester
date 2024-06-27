@@ -4,36 +4,45 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           lfs: true
+          
       - name: Set up Unity
+        id: setup-unity
         uses: game-ci/unity-test-runner@v1
         with:
           unityVersion: '2022.3.7f1'  # Replace with your Unity version
           components: 'unity, android'  # Replace with necessary components
           license: ${{ secrets.UNITY_LICENSE }}
+          
       - name: Cache Unity packages
         uses: actions/cache@v2
         with:
           path: Library
           key: ${{ runner.os }}-unity-${{ hashFiles('**/PackagesLock.json') }}
+          
       - name: Publish test results
         uses: actions/upload-artifact@v2
         with:
           name: test-results
           path: results.xml
+          
       - name: Build project
         run: |
           mkdir -p build
           xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' unity-editor -quit -batchmode -nographics -projectPath . -buildTarget StandaloneLinux64 -buildPath build/StandaloneLinux64
         continue-on-error: true
+        
+      - name: Set build artifact path
+        run: echo "BUILD_PATH=build/StandaloneLinux64" >> $GITHUB_ENV
+        
       - name: Upload build
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: build
+          path: ${{ env.BUILD_PATH }}
