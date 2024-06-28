@@ -14,9 +14,9 @@ jobs:
 
       - name: Set up Unity License
         run: |
-          echo "${{ secrets.UNITY_LICENSE }}" > C:\Unity\Unity_v2022.3.7f1.ulf
+          echo "${{ secrets.UNITY_LICENSE }}" > Unity_v2022.3.7f1.ulf
           mkdir C:\Unity
-          move C:\Unity\Unity_v2022.3.7f1.ulf C:\Unity\Unity_v2022.3.7f1.ulf
+          move Unity_v2022.3.7f1.ulf C:\Unity\Unity_v2022.3.7f1.ulf
         shell: powershell
 
       - name: Cache Unity packages
