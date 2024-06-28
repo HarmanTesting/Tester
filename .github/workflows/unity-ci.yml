@@ -14,9 +14,9 @@ jobs:
 
       - name: Set up Unity License
         run: |
-          echo "${{ secrets.UNITY_LICENSE }}" > Unity_v2022.3.25f1.ulf
+          echo "${{ secrets.UNITY_LICENSE }}" > Unity_v2022.3.7f1.ulf
           mkdir C:\Unity
-          move Unity_v2022.3.25f1.ulf C:\Unity\Unity_v2022.3.25f1.ulf
+          move Unity_v2022.3.7f1.ulf C:\Unity\Unity_v2022.3.7f1.ulf
         shell: powershell
 
       - name: Cache Unity packages
@@ -28,20 +28,20 @@ jobs:
       - name: Debug paths
         run: |
           echo "Listing Unity directory contents..."
-          dir "C:\Program Files\Unity\Hub\Editor\2022.3.25f1-x86_64\Editor"
+          dir "D:\Hub\2022.3.7f1\Editor"
           echo "Listing project directory contents..."
-          dir "E:\MyTestingProjects\aa"
+          dir "E:\MyTestingProjects\Easy AR"
         shell: cmd
           
       - name: Build project
         run: |
           echo "Compiling the code..."
-          "C:\Program Files\Unity\Hub\Editor\2022.3.25f1-x86_64\Editor\Unity.exe" -quit -batchmode -nographics -projectPath "E:\MyTestingProjects\aa" -buildTarget StandaloneWindows64 -buildPath "E:\MyTestingProjects\aa\Build\Builds\WindowsBuild"
+          "D:\Hub\2022.3.7f1\Editor\Unity.exe" -quit -batchmode -nographics -projectPath "E:\MyTestingProjects\Easy AR" -buildTarget StandaloneWindows64 -buildPath "E:\MyTestingProjects\Easy AR\Build\Builds\WindowsBuild"
           echo "Compile complete."
         shell: cmd
 
       - name: Set build artifact path
-        run: echo "BUILD_PATH=E:\MyTestingProjects\aa\Build\Builds\WindowsBuild" >> $GITHUB_ENV
+        run: echo "BUILD_PATH=E:\MyTestingProjects\Easy AR\Build\Builds\WindowsBuild" >> $GITHUB_ENV
         
       - name: Upload build
         uses: actions/upload-artifact@v2
