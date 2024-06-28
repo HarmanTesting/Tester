@@ -15,6 +15,7 @@ jobs:
       - name: Set up Unity License
         run: |
           echo "${{ secrets.UNITY_LICENSE }}" > Unity_v2020.x.ulf
+          sudo mkdir -p /opt/Unity
           sudo mv Unity_v2020.x.ulf /opt/Unity/Unity_v2020.x.ulf
         shell: bash
         
