@@ -29,14 +29,10 @@ jobs:
         run: |
           echo "Listing Unity directory contents..."
           dir "D:\Hub\2022.3.7f1\Editor"
-
           echo "Listing project directory contents..."
           dir "E:\MyTestingProjects\EasyAR"
-
-          echo "Listing build directory contents..."
-          dir "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
         shell: C:\Windows\system32\cmd.EXE "CALL "{0}""
-
+          
       - name: Build project
         run: |
           echo "Compiling the code..."
@@ -45,23 +41,10 @@ jobs:
         shell: C:\Windows\system32\cmd.EXE "CALL "{0}""
 
       - name: Set build artifact path
-        run: |
-          echo "BUILD_PATH=E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild" >> $GITHUB_ENV
-
-      - name: Check upload status
-        run: |
-          if [ ${{ steps.upload-artifact.outputs.result }} == 'success' ]; then
-            echo "Build artifact uploaded successfully."
-          else
-            echo "Failed to upload build artifact."
-            exit 1
-          fi
+        run: echo "BUILD_PATH=E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild" >> $GITHUB_ENV
         
       - name: Upload build
-        id: upload-artifact
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: ${{ env.BUILD_PATH }}
-      
-      
+          path: ${{ env.buildPath }}
