@@ -2,7 +2,7 @@ name: Build project
 on: [push, pull request]
 jobs:
     buildForAllSupportedPlatforms:
-        name: Build for ${{ matrix.targetPlatform }} Iuns-on: ubuntu-latest
+        name: Build for ${{ matrix.targetPlatform }}
         runs-on: ubuntu-latest
         strategy:
             fail-fast: false
