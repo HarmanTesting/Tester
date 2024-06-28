@@ -33,18 +33,18 @@ jobs:
           dir "E:\MyTestingProjects\EasyAR"
         shell: C:\Windows\system32\cmd.EXE "CALL "{0}""
 
-      - name: Debug Build Directory
-        run: |
-          echo "Listing contents of build directory..."
-          Get-ChildItem -Path "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
-        shell: powershell
-
       - name: Build project
         run: |
           echo "Compiling the code..."
           "D:\Hub\2022.3.7f1\Editor\Unity.exe" -quit -batchmode -nographics -projectPath "E:\MyTestingProjects\EasyAR" -buildTarget StandaloneWindows64 -buildPath "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
           echo "Compile complete."
         shell: C:\Windows\system32\cmd.EXE "CALL "{0}""
+        
+      - name: Debug Build Directory
+        run: |
+          echo "Listing contents of build directory..."
+          Get-ChildItem -Path "${{ github.workspace }}/Build/Builds/WindowsBuild"
+        shell: powershell
 
       - name: Set build artifact path
         run: echo "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
