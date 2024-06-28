@@ -4,34 +4,20 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Use ubuntu-latest for Linux environment
+    runs-on: ubuntu-latest
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           lfs: true
-
-      - name: Set up Unity Hub and Editor
-        run: |
-          # Install dependencies
-          sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-dev
-
-          # Download and install Unity Hub
-          wget -O unityhub.AppImage https://public-cdn.cloud.unity3d.com/hub/prod/UnityHub.AppImage
-          chmod +x unityhub.AppImage
-          ./unityhub.AppImage --appimage-extract
-          sudo mv squashfs-root /opt/unityhub
-          sudo ln -s /opt/unityhub/AppRun /usr/local/bin/unityhub
-
-          # Accept Unity Hub EULA
-          mkdir -p ~/.config/UnityHub
-          echo '{"username": "", "password": "", "license": {"accepted": true, "username": "", "password": ""}}' > ~/.config/UnityHub/eulaAccepted
-
-          # Install Unity Editor
-          unityhub -- --headless install --version 2020.3.17f1 --module linux-il2cpp
           
+      - name: Set up Unity
+        uses: game-ci/unity-builder@v2
+        with:
+          unityVersion: '2022.3.7f1'  # Replace with your Unity version
+          targetPlatform: 'StandaloneLinux64'  # Specify the target platform
+
       - name: Cache Unity packages
         uses: actions/cache@v2
         with:
@@ -39,10 +25,12 @@ jobs:
           key: ${{ runner.os }}-unity-${{ hashFiles('**/PackagesLock.json') }}
 
       - name: Build project
-        run: |
-          mkdir -p build
-          /opt/unityhub/squashfs-root/usr/bin/unity-editor -quit -batchmode -nographics -projectPath . -buildTarget StandaloneLinux64 -buildPath build/StandaloneLinux64
-        continue-on-error: true
+        uses: game-ci/unity-builder@v2
+        with:
+          unityVersion: '2022.3.7f1'  # Replace with your Unity version
+          targetPlatform: 'StandaloneLinux64'  # Specify the target platform
+          buildName: 'StandaloneLinux64'
+          buildPath: build
 
       - name: Set build artifact path
         run: echo "BUILD_PATH=build/StandaloneLinux64" >> $GITHUB_ENV
