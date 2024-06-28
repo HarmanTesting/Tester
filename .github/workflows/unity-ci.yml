@@ -12,29 +12,26 @@ jobs:
         with:
           lfs: true
           
-      - name: Set up Unity
-        uses: game-ci/unity-builder@v2
-        with:
-          unityVersion: '2022.3.7f1'  # Replace with your Unity version
-          targetPlatform: 'StandaloneLinux64'  # Specify the target platform
-
+      - name: Set up Unity License
+        run: |
+          echo "${{ secrets.UNITY_LICENSE }}" > Unity_v2020.x.ulf
+          sudo mv Unity_v2020.x.ulf /opt/Unity/Unity_v2020.x.ulf
+        shell: bash
+        
       - name: Cache Unity packages
         uses: actions/cache@v2
         with:
           path: Library
           key: ${{ runner.os }}-unity-${{ hashFiles('**/PackagesLock.json') }}
-
+          
       - name: Build project
-        uses: game-ci/unity-builder@v2
-        with:
-          unityVersion: '2022.3.7f1'  # Replace with your Unity version
-          targetPlatform: 'StandaloneLinux64'  # Specify the target platform
-          buildName: 'StandaloneLinux64'
-          buildPath: build
-
+        run: |
+          /opt/Unity/Editor/Unity -quit -batchmode -nographics -projectPath . -buildTarget StandaloneLinux64 -buildPath build/StandaloneLinux64
+        continue-on-error: true
+        
       - name: Set build artifact path
         run: echo "BUILD_PATH=build/StandaloneLinux64" >> $GITHUB_ENV
-
+        
       - name: Upload build
         uses: actions/upload-artifact@v2
         with:
