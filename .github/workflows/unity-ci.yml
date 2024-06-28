@@ -12,10 +12,11 @@ jobs:
         with:
           lfs: true
           
-      - name: Download Unity Hub
+      - name: Download Unity Editor
         run: |
-          wget -O unity-editor.AppImage https://www.dropbox.com/s/your_dropbox_link/UnityHub.AppImage?dl=1
-          chmod +x unity-editor.AppImage  # Ensure the downloaded file is executable
+          wget -O unity-editor.tar.xz https://download.unity3d.com/download_unity/<version>/UnitySetup-<version>-x86_64.tar.xz
+          tar -xf unity-editor.tar.xz -C /opt
+          chmod +x /opt/Unity/Editor/Unity  # Ensure the extracted file is executable
           
       - name: Cache Unity packages
         uses: actions/cache@v2
@@ -32,7 +33,7 @@ jobs:
       - name: Build project
         run: |
           mkdir -p build
-          ./unity-editor.AppImage -quit -batchmode -nographics -projectPath . -buildTarget StandaloneLinux64 -buildPath build/StandaloneLinux64
+          /opt/Unity/Editor/Unity -quit -batchmode -nographics -projectPath . -buildTarget StandaloneLinux64 -buildPath build/StandaloneLinux64
         continue-on-error: true
         
       - name: Set build artifact path
