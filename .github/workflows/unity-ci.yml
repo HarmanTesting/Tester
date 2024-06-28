@@ -28,17 +28,17 @@ jobs:
       - name: Debug paths
         run: |
           echo "Listing Unity directory contents..."
-          dir "C:\Program Files\Unity\Hub\Editor\2022.3.7f1\Editor"
+          dir "D:\Hub\2022.3.7f1\Editor"
           echo "Listing project directory contents..."
           dir "E:\MyTestingProjects\EasyAR"
-        shell: powershell
+        shell: C:\Windows\system32\cmd.EXE "CALL "{0}""
           
       - name: Build project
         run: |
           echo "Compiling the code..."
-          "C:\Program Files\Unity\Hub\Editor\2022.3.7f1\Editor\Unity.exe" -quit -batchmode -nographics -projectPath "E:\MyTestingProjects\EasyAR" -buildTarget StandaloneWindows64 -buildPath "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
+          "D:\Hub\2022.3.7f1\Editor\Unity.exe" -quit -batchmode -nographics -projectPath "E:\MyTestingProjects\EasyAR" -buildTarget StandaloneWindows64 -buildPath "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
           echo "Compile complete."
-        shell: powershell
+        shell: C:\Windows\system32\cmd.EXE "CALL "{0}""
 
       - name: Set build artifact path
         run: echo "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
