@@ -47,5 +47,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: ${{ secrets.BUILD_PATH }}
+          path: ${{ env.BUILD_PATH }}
 
