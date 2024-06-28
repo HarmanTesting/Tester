@@ -1,36 +1,67 @@
-name: Build project
+name: Unity CI
+
 on: [push, pull_request]
+
 jobs:
-    buildForAllSupportedPlatforms:
-        name: Build for ${{ matrix.targetPlatform }}
-        runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
-            matrix:
-                targetPlatform:
-                    - StandaloneOSX
-                    - StandaloneWindows
-                    - StandaloneWindows64
-                    - StandaloneLinux64
-                    - iOS
-                    - Android
-                    - WebGL
-        steps:
-            - uses: actions/checkout@v2
-              with:
-                  fetch-depth: 0
-                  lfs: true
-            - uses: actions/cache@v2
-              with:
-                  path: Library
-                  key: Library-${{ matrix. targetPlatform }}
-                  restore-keys: Library-
-            - uses: game-ci/unity-builder@v2
-              env:
-                  UNITY LICENSE: ${{ secrets. UNITY_LICENSE }}
-              with:
-                  targetPlatform: ${{ matrix.targetPlatform }}
-            - uses: actions/upload-artifact@v2
-              with:
-                  name: Build-${{ matrix. targetPlatform }}
-                  path: build/${{ matrix. targetPlatform }}
+  build:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set up Unity License
+        run: |
+          echo "${{ secrets.UNITY_LICENSE }}" > Unity_v2022.3.7f1.ulf
+          mkdir C:\Unity
+          move Unity_v2022.3.7f1.ulf C:\Unity\Unity_v2022.3.7f1.ulf
+        shell: powershell
+
+      - name: Cache Unity packages
+        uses: actions/cache@v2
+        with:
+          path: Library
+          key: ${{ runner.os }}-unity-${{ hashFiles('**/PackagesLock.json') }}
+
+      - name: Debug paths
+        run: |
+          echo "Listing Unity directory contents..."
+          dir "D:\Hub\2022.3.7f1\Editor"
+
+          echo "Listing project directory contents..."
+          dir "E:\MyTestingProjects\EasyAR"
+
+          echo "Listing build directory contents..."
+          dir "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
+        shell: C:\Windows\system32\cmd.EXE "CALL "{0}""
+
+      - name: Build project
+        run: |
+          echo "Compiling the code..."
+          "D:\Hub\2022.3.7f1\Editor\Unity.exe" -quit -batchmode -nographics -projectPath "E:\MyTestingProjects\EasyAR" -buildTarget StandaloneWindows64 -buildPath "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
+          echo "Compile complete."
+        shell: C:\Windows\system32\cmd.EXE "CALL "{0}""
+
+      - name: Set build artifact path
+        run: |
+          echo "BUILD_PATH=E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild" >> $GITHUB_ENV
+
+      - name: Check upload status
+        run: |
+          if [ ${{ steps.upload-artifact.outputs.result }} == 'success' ]; then
+            echo "Build artifact uploaded successfully."
+          else
+            echo "Failed to upload build artifact."
+            exit 1
+          fi
+        
+      - name: Upload build
+        id: upload-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: ${{ env.BUILD_PATH }}
+      
+      
