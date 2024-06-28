@@ -36,7 +36,7 @@ jobs:
       - name: Debug Build Directory
         run: |
           echo "Listing contents of build directory..."
-          dir "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
+          Get-ChildItem -Path "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
         shell: powershell
 
       - name: Build project
