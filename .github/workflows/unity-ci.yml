@@ -41,10 +41,10 @@ jobs:
         shell: C:\Windows\system32\cmd.EXE "CALL "{0}""
 
       - name: Set build artifact path
-        run: echo "BUILD_PATH=build\StandaloneWindows64" >> $GITHUB_ENV
+        run: echo "BUILD_PATH=build\StandaloneWindows64" >> $GITHUB_SECRETS
         
       - name: Upload build
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: ${{ env.BUILD_PATH }}
+          path: ${{ secrets.BUILD_PATH }}
