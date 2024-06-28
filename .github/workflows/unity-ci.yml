@@ -35,12 +35,14 @@ jobs:
 
           echo "Listing build directory contents..."
           dir "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
+        shell: C:\Windows\system32\cmd.EXE "CALL "{0}""
 
       - name: Build project
         run: |
           echo "Compiling the code..."
           "D:\Hub\2022.3.7f1\Editor\Unity.exe" -quit -batchmode -nographics -projectPath "E:\MyTestingProjects\EasyAR" -buildTarget StandaloneWindows64 -buildPath "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
           echo "Compile complete."
+        shell: C:\Windows\system32\cmd.EXE "CALL "{0}""
 
       - name: Set build artifact path
         run: |
