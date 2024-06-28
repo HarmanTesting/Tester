@@ -14,7 +14,7 @@ jobs:
           
       - name: Download Unity Editor
         run: |
-          wget -O unity-editor.tar.xz https://download.unity3d.com/download_unity/<version>/UnitySetup-<version>-x86_64.tar.xz
+          wget -O unity-editor.tar.xz https://download.unity3d.com/download_unity/2020.3.17f1/UnitySetup-2020.3.17f1-x86_64.tar.xz
           tar -xf unity-editor.tar.xz -C /opt
           chmod +x /opt/Unity/Editor/Unity  # Ensure the extracted file is executable
           
