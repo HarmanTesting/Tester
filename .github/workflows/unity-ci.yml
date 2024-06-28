@@ -1,6 +1,12 @@
 name: Unity CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -8,16 +14,14 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          lfs: true
+        uses: actions/checkout@v2
 
       - name: Set up Unity License
         run: |
           echo "${{ secrets.UNITY_LICENSE }}" > Unity_v2022.x.ulf
           mkdir "D:\Hub\2022.3.7f1"
           move Unity_v2022.x.ulf "D:\Hub\2022.3.7f1\Unity_v2022.x.ulf"
-        shell: powershell
+        shell: cmd
 
       - name: Cache Unity packages
         uses: actions/cache@v2
