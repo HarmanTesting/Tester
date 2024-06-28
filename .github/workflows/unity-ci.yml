@@ -31,7 +31,7 @@ jobs:
           
       - name: Build project
         run: |
-          mkdir -p build/opt/Unity/Editor/Unity -quit -batchmode -nographics -projectPath . -buildTarget StandaloneLinux64 -buildPath build/StandaloneLinux64
+          mkdir -p build./unity-editor.AppImage -quit -batchmode -nographics -projectPath . -buildTarget StandaloneLinux64 -buildPath build/StandaloneLinux64
         continue-on-error: true
         
       - name: Set build artifact path
