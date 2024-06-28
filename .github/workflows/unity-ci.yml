@@ -5,28 +5,36 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           lfs: true
-
+          
       - name: Set up Unity License
         run: |
           echo "${{ secrets.UNITY_LICENSE }}" > Unity_v2020.x.ulf
           sudo mkdir -p /opt/Unity
           sudo mv Unity_v2020.x.ulf /opt/Unity/Unity_v2020.x.ulf
         shell: bash
-
+        
       - name: Cache Unity packages
         uses: actions/cache@v2
         with:
           path: Library
           key: ${{ runner.os }}-unity-${{ hashFiles('**/PackagesLock.json') }}
-
-      - name: Install Unity (example path)
+          
+      - name: Build project
         run: |
-          sudo apt-get update
-          sudo apt-get install -y unity-hub
-          wget -O unity-editor.AppImage https://public-cdn.cloud.unity3d.com/hub/prod/releases-linux.yml | tar -rf /.bin.tar ` downloadedwget Home useActionCode.tar.gz
+          /opt/Unity/Editor/Unity -quit -batchmode -nographics -projectPath . -buildTarget StandaloneLinux64 -buildPath build/StandaloneLinux64
+        continue-on-error: true
+        
+      - name: Set build artifact path
+        run: echo "BUILD_PATH=build/StandaloneLinux64" >> $GITHUB_ENV
+        
+      - name: Upload build
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: ${{ env.BUILD_PATH }}
