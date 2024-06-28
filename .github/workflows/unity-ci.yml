@@ -41,10 +41,10 @@ jobs:
         shell: C:\Windows\system32\cmd.EXE "CALL "{0}""
 
       - name: Set build artifact path
-        run: echo ${{ env.BUILD_PATH }}
+        run: echo "BUILD_PATH=E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild" >> $GITHUB_ENV
         
       - name: Upload build
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: ${{ env.BUILD_PATH }}
+          path: ${{ env.buildPath }}
