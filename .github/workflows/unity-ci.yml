@@ -14,9 +14,9 @@ jobs:
           
       - name: Set up Unity License
         run: |
-          echo "${{ secrets.UNITY_LICENSE }}" > Unity_v2020.x.ulf
-          mkdir C:\Unity
-          move Unity_v2020.x.ulf C:\Unity\Unity_v2020.x.ulf
+          echo "${{ secrets.UNITY_LICENSE }}" > Unity_v2022.x.ulf
+          mkdir "C:\Program Files\Unity\Hub\Editor\2022.3.7f1"
+          move Unity_v2022.x.ulf "C:\Program Files\Unity\Hub\Editor\2022.3.7f1\Unity_v2022.x.ulf"
         shell: powershell
         
       - name: Cache Unity packages
@@ -27,13 +27,13 @@ jobs:
           
       - name: Build project
         run: |
-          Start-Process -FilePath "C:\Users\Deftsoft-Unity\AppData\Local\Temp\Unity\Editor\Unity.exe" `
+          Start-Process -FilePath "C:\Program Files\Unity\Hub\Editor\2022.3.7f1\Editor\Unity.exe" `
                         -ArgumentList '-quit', '-batchmode', '-nographics', '-projectPath', '.', '-buildTarget', 'StandaloneWindows64', '-buildPath', 'build\StandaloneWindows64' `
                         -NoNewWindow -Wait
         continue-on-error: true
         
       - name: Set build artifact path
-        run: echo "BUILD_PATH=build/StandaloneWindows64" >> $GITHUB_ENV
+        run: echo "BUILD_PATH=build\StandaloneWindows64" >> $GITHUB_ENV
         
       - name: Upload build
         uses: actions/upload-artifact@v2
