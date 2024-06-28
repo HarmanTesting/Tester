@@ -27,7 +27,9 @@ jobs:
           
       - name: Build project
         run: |
-          "C:\Users\Deftsoft-Unity\AppData\Local\Temp\Unity\Editor\Unity.exe" -quit -batchmode -nographics -projectPath . -buildTarget StandaloneWindows64 -buildPath build\StandaloneWindows64
+          Start-Process -FilePath "C:\Users\Deftsoft-Unity\AppData\Local\Temp\Unity\Editor\Unity.exe" `
+                        -ArgumentList '-quit', '-batchmode', '-nographics', '-projectPath', '.', '-buildTarget', 'StandaloneWindows64', '-buildPath', 'build\StandaloneWindows64' `
+                        -NoNewWindow -Wait
         continue-on-error: true
         
       - name: Set build artifact path
