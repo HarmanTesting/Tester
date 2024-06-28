@@ -12,11 +12,6 @@ jobs:
         with:
           lfs: true
           
-      - name: List Directory Contents
-        run: |
-          dir "D:\Hub\2022.3.7f1\Editor"
-        shell: powershell
-
       - name: Set up Unity License
         run: |
           echo "${{ secrets.UNITY_LICENSE }}" > Unity_v2022.x.ulf
