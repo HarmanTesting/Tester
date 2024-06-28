@@ -31,7 +31,7 @@ jobs:
           dir "D:\Hub\2022.3.7f1\Editor"
           echo "Listing project directory contents..."
           dir "E:\MyTestingProjects\Easy AR"
-        shell: cmd
+        shell: C:\Windows\system32\cmd.EXE /D /E:ON /V:OFF /S /C "CALL "{0}""
           
       - name: Build project
         run: |
