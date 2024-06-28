@@ -14,9 +14,9 @@ jobs:
 
       - name: Set up Unity License
         run: |
-          echo "${{ secrets.UNITY_LICENSE }}" > Unity_v2022.3.7f1.ulf
+          echo "${{ secrets.UNITY_LICENSE }}" > C:\Unity\Unity_v2022.3.7f1.ulf
           mkdir C:\Unity
-          move Unity_v2022.3.7f1.ulf C:\Unity\Unity_v2022.3.7f1.ulf
+          move C:\Unity\Unity_v2022.3.7f1.ulf C:\Unity\Unity_v2022.3.7f1.ulf
         shell: powershell
 
       - name: Cache Unity packages
@@ -28,24 +28,25 @@ jobs:
       - name: Debug paths
         run: |
           echo "Listing Unity directory contents..."
-          dir "D:\Hub\2022.3.7f1\Editor"
+          dir "C:\Program Files\Unity\Hub\Editor\2022.3.7f1\Editor"
           echo "Listing project directory contents..."
           dir "E:\MyTestingProjects\EasyAR"
-        shell: C:\Windows\system32\cmd.EXE "CALL "{0}""
+        shell: powershell
           
       - name: Build project
         run: |
           echo "Compiling the code..."
-          "D:\Hub\2022.3.7f1\Editor\Unity.exe" -quit -batchmode -nographics -projectPath "E:\MyTestingProjects\EasyAR" -buildTarget StandaloneWindows64 -buildPath "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
+          "C:\Program Files\Unity\Hub\Editor\2022.3.7f1\Editor\Unity.exe" -quit -batchmode -nographics -projectPath "E:\MyTestingProjects\EasyAR" -buildTarget StandaloneWindows64 -buildPath "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
           echo "Compile complete."
-        shell: C:\Windows\system32\cmd.EXE "CALL "{0}""
+        shell: powershell
 
       - name: Set build artifact path
-        run: echo ${{env.BUILD_PATH}}
+        run: echo "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
+        id: set_build_path
+        shell: powershell
 
       - name: Upload build
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: ${{ env.BUILD_PATH }}
-
+          path: ${{ steps.set_build_path.outputs.stdout }}
