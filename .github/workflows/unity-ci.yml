@@ -11,34 +11,42 @@ jobs:
         uses: actions/checkout@v4
         with:
           lfs: true
-          
-      - name: Download Unity Editor
+
+      - name: Set up Unity Hub and Editor
         run: |
-          wget -O unity-editor.tar.xz https://download.unity3d.com/download_unity/2020.3.17f1/UnitySetup-2020.3.17f1-x86_64.tar.xz
-          tar -xf unity-editor.tar.xz -C /opt
-          chmod +x /opt/Unity/Editor/Unity  # Ensure the extracted file is executable
+          # Install dependencies
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-dev
+
+          # Download and install Unity Hub
+          wget -O unityhub.AppImage https://public-cdn.cloud.unity3d.com/hub/prod/UnityHub.AppImage
+          chmod +x unityhub.AppImage
+          ./unityhub.AppImage --appimage-extract
+          sudo mv squashfs-root /opt/unityhub
+          sudo ln -s /opt/unityhub/AppRun /usr/local/bin/unityhub
+
+          # Accept Unity Hub EULA
+          mkdir -p ~/.config/UnityHub
+          echo '{"username": "", "password": "", "license": {"accepted": true, "username": "", "password": ""}}' > ~/.config/UnityHub/eulaAccepted
+
+          # Install Unity Editor
+          unityhub -- --headless install --version 2020.3.17f1 --module linux-il2cpp
           
       - name: Cache Unity packages
         uses: actions/cache@v2
         with:
           path: Library
           key: ${{ runner.os }}-unity-${{ hashFiles('**/PackagesLock.json') }}
-          
-      - name: Publish test results
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-results
-          path: results.xml
-          
+
       - name: Build project
         run: |
           mkdir -p build
-          /opt/Unity/Editor/Unity -quit -batchmode -nographics -projectPath . -buildTarget StandaloneLinux64 -buildPath build/StandaloneLinux64
+          /opt/unityhub/squashfs-root/usr/bin/unity-editor -quit -batchmode -nographics -projectPath . -buildTarget StandaloneLinux64 -buildPath build/StandaloneLinux64
         continue-on-error: true
-        
+
       - name: Set build artifact path
         run: echo "BUILD_PATH=build/StandaloneLinux64" >> $GITHUB_ENV
-        
+
       - name: Upload build
         uses: actions/upload-artifact@v2
         with:
