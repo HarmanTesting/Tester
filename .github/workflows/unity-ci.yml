@@ -32,7 +32,13 @@ jobs:
           echo "Listing project directory contents..."
           dir "E:\MyTestingProjects\EasyAR"
         shell: C:\Windows\system32\cmd.EXE "CALL "{0}""
-          
+
+      - name: Debug Build Directory
+        run: |
+          echo "Listing contents of build directory..."
+          dir "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
+        shell: powershell
+
       - name: Build project
         run: |
           echo "Compiling the code..."
