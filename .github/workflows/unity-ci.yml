@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     
     steps:
       - name: Checkout repository
@@ -15,9 +15,9 @@ jobs:
       - name: Set up Unity License
         run: |
           echo "${{ secrets.UNITY_LICENSE }}" > Unity_v2020.x.ulf
-          sudo mkdir -p /opt/Unity
-          sudo mv Unity_v2020.x.ulf /opt/Unity/Unity_v2020.x.ulf
-        shell: bash
+          mkdir C:\Unity
+          move Unity_v2020.x.ulf C:\Unity\Unity_v2020.x.ulf
+        shell: powershell
         
       - name: Cache Unity packages
         uses: actions/cache@v2
@@ -27,11 +27,11 @@ jobs:
           
       - name: Build project
         run: |
-          /opt/Unity/Editor/Unity -quit -batchmode -nographics -projectPath . -buildTarget StandaloneLinux64 -buildPath build/StandaloneLinux64
+          "C:\Users\Deftsoft-Unity\AppData\Local\Temp\Unity\Editor\Unity.exe" -quit -batchmode -nographics -projectPath . -buildTarget StandaloneWindows64 -buildPath build\StandaloneWindows64
         continue-on-error: true
         
       - name: Set build artifact path
-        run: echo "BUILD_PATH=build/StandaloneLinux64" >> $GITHUB_ENV
+        run: echo "BUILD_PATH=build/StandaloneWindows64" >> $GITHUB_ENV
         
       - name: Upload build
         uses: actions/upload-artifact@v2
