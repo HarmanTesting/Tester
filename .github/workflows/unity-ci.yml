@@ -3,7 +3,7 @@ name: Unity CI
 on: [push, pull_request]
 
 env:
-    BUILDPATH: "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
+    buildPath: "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
 
 jobs:
   build:
