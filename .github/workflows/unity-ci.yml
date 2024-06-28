@@ -2,9 +2,6 @@ name: Unity CI
 
 on: [push, pull_request]
 
-env:
-    buildPath: "E:\MyTestingProjects\EasyAR\Build\Builds\WindowsBuild"
-
 jobs:
   build:
     runs-on: windows-latest
